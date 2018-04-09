@@ -201,22 +201,8 @@ void MCU_initialize(void)
 	 * TIMER2 and PWN
 	 */
 
-	T2CON = 0x00;
-	T2CON &= ~(1 << 1); // TCS = 0;
-	T2CONbits.TCKPS = 0b000;
-	T2CONbits.TGATE = 0;
-	T2CONbits.ON = 1;
-	PR2 = 0xFF; // half period
-	
-	TRISDbits.TRISD10 = 0;
-	OC1CON = 0x00000000;
-	OC1CONbits.OCM = 0b110;
-	OC1CONbits.OCTSEL = 0; //Timer2
-	OC1CONbits.OC32 = 1;
-	OC1CONbits.SIDL = 0;
-	OC1CONbits.ON = 1;
-	
-	OC1R = 0xFF;
+	OpenOC1( OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, 0, 0);
+    OpenTimer2( T2_ON | T2_PS_1_1 | T2_SOURCE_INT, 0xFFFF);
 
 
 	/*
