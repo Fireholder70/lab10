@@ -139,7 +139,13 @@ void main(void)
                  * {
                  *      DAC_SEND(1023);
                  * }
-			
+		TFT_FillRectangle(0,250,255,40)
+                 * if(touch_y >= 250 && touch_y <= 290)
+                 * {
+                 *      uint16_t value = 0;
+                 *      value = touch_x * 4;
+                 *      DAC_SEND(value);
+                 * }
 		} else if (screen == TEMP && sample_temp == true) {
 			
 			temp_sense = (ADC_sample(8)*3.3 / 1024.0 - .5) / .01;
