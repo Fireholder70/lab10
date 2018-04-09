@@ -224,10 +224,23 @@ void MCU_initialize(void)
 	 */
 
 
-    OpenOC1( OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, 0, 0);
-    OpenTimer2( T2_ON | T2_PS_1_1 | T2_SOURCE_INT, 0xFFFF);
+	T2CON = 0x00;
+	T2CONbits.ON = 1;
+	PR2 = 10000; // half period
+	TMR2 = 0;
+	
+	//TRISDbits.TRISD10 = 0;
+	OC1CON = 0x00000000;
+	OC1CONbits.OCM = 0b110; //PWM mode on OC1; Fault pin disabled
+	OC1CONbits.OCTSEL = 0; //Timer2 selected
+	OC1R = 0xFF; //50% duty cycle
+	OC1RS = 0xFF;
+	OC1CONbits.ON = 1;
 
-    SetDCOC1PWM(10000);
+    //OpenOC1( OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, 0, 0);
+    //OpenTimer2( T2_ON | T2_PS_1_1 | T2_SOURCE_INT, 0xFFFF);
+
+    //SetDCOC1PWM(10000);
 
 
 	/*
@@ -293,8 +306,28 @@ void __ISR(_TIMER_1_VECTOR, IPL7SOFT) Timer1Handler(void)
 }
 
 
-void __ISR(_OUTPUT_COMPARE_1_VECTOR, ipl7) OC1_IntHandler (void)
+unsigned int Pwm; // Variable to store calculated PWM value
+unsigned char Mode = 0; // Variable to determine ramp up or ramp down
+
+void __ISR(_TIMER_2_VECTOR, ipl7) T2_IntHandler(void)
 {
-// insert user code here
-IFS0CLR = 0x0040;                 // Clear the OC1 interrupt flag
-}
+	if (Mode) {
+		if (Pwm < 0xFFFF) // Ramp up mode
+		{
+			Pwm++; // If the duty cycle is not at max, increase 
+			OC1RS = Pwm; // Write new duty cycle
+		} else {
+			Mode = 0; // PWM is at max, change mode to ramp down
+		}
+	}// End of ramp up
+	else {
+		if (!Pwm) // Ramp Down mode
+		{
+			Pwm--; // If the duty cycle is not at min, increase
+			OC1RS = Pwm; // Write new duty cycle
+		} else {
+			Mode = 1; // PWM is at min, change mode to ramp up
+		}
+	} // End of ramp down
+	// Insert user code here
+	IFS0CLR = 0x0100; // Clearing Timer2 interrupt flag
