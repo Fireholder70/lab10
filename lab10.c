@@ -205,18 +205,19 @@ void MCU_initialize(void)
 	T2CON &= ~(1 << 1); // TCS = 0;
 	T2CONbits.TCKPS = 0b000;
 	T2CONbits.TGATE = 0;
+        PR2 = 0xFF; // half period
 	T2CONbits.ON = 1;
-	PR2 = 0xFF; // half period
+
 	
-	TRISDbits.TRISD10 = 0;
+	TRISDbits.TRISD0 = 0;
 	OC1CON = 0x00000000;
 	OC1CONbits.OCM = 0b110;
 	OC1CONbits.OCTSEL = 0; //Timer2
 	OC1CONbits.OC32 = 1;
 	OC1CONbits.SIDL = 0;
+        OC1RS = 0xFF;
 	OC1CONbits.ON = 1;
 	
-	OC1R = 0xFF;
 
 
 	/*
