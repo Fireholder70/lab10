@@ -85,8 +85,8 @@ void __ISR(_TIMER_1_VECTOR, IPL7SOFT) Timer1Handler(void);
  */
 enum screen_t {
     MAIN,
-    JSTICK,
-    TEMP
+    DAC,
+    PWM
 };
 
 /*

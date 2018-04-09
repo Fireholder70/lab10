@@ -87,11 +87,20 @@ void main(void)
 		 
 		if (old_screen != screen) {
 			TFT_FillRectangle(0, 80, 240, 240, TFT_BLUE);
-			if (screen == TEMP) {
-				uint16_t i;
-				for (i = 0; i < num; i++) {
-					TFT_DrawPixel(data[i].x, data[i].y, TFT_YELLOW);
-				}
+			if (screen == DAC)
+                 *       {
+                 *          TFT_FillRectangle(10,90,60,60, TFT_GREEN);
+                            TFT_FillRectangle(80,90,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(150,90,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(10,160,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(80,160,60,60, TFT_GREEN);
+                 *
+                 *          TFT_DrawString (10, 90, "0%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (80, 90, "25%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (150, 90, "50%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (10, 160, "75%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (80, 160, "100%", TFT_BLACK, TFT_GREEN);
+                         }
 			}
 			old_screen = screen;
 		}
@@ -107,23 +116,30 @@ void main(void)
 			TFT_DrawString(10, 135, "Lab 9", TFT_YELLOW, TFT_BLUE, 2);
 			TFT_DrawString(10, 160, "Jordan Hartung", TFT_GREEN, TFT_BLUE, 2);
 			TFT_DrawString(10, 200, "Jeremy Zacharia", TFT_PURPLE, TFT_BLUE, 2);
-		} else if (screen == JSTICK) {
-			valueu = ADC_sample(4);
-			values = ADC_sample(2);
+		} else if (screen == DAC) {
 
-			y = map(1023 - valueu, 0, 1023, 89, 311); //scale
-			x = map(values, 0, 1023, 9, 231); //scale
-
-			TFT_FillCircle(xp, yp, rad, TFT_BLUE);
-			TFT_DrawCircle(x, y, rad, TFT_YELLOW);
-			xp = x;
-			yp = y;
-
-			sprintf(message, "X: %d.0, Y: %d.0", x, y);
-			//TFT_DrawCircle(120, 200, 111, TFT_YELLOW);
-			TFT_DrawString(10, 100, message, TFT_BLACK, TFT_BLUE, 2);
-
-			printf("Val: %d\t%d\t%d\t%d\n", valueu, values, x, y);
+                 TFT_FillRectangle(0,200,255,10,TFT_BLACK);
+                 if(touch_x >= 10 && touch_x <= 71 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(0);
+                 * }
+                 if(touch_x >= 80 && touch_x <= 140 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(256);
+                 * }
+                 if(touch_x >= 150 && touch_x <= 210 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(512);
+                 * }
+                 if(touch_x >= 10 && touch_x <= 71 && touch_y >= 160 && touch_y <= 220)
+                 * {
+                 *      DAC_SEND(767);
+                 * }
+                 if(touch_x >= 80 && touch_x <= 140 && touch_y >= 160 && touch_y <= 220)
+                 * {
+                 *      DAC_SEND(1023);
+                 * }
+			
 		} else if (screen == TEMP && sample_temp == true) {
 			
 			temp_sense = (ADC_sample(8)*3.3 / 1024.0 - .5) / .01;
@@ -201,8 +217,24 @@ void MCU_initialize(void)
 	 * TIMER2 and PWN
 	 */
 
-	OpenOC1( OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, 0, 0);
-    OpenTimer2( T2_ON | T2_PS_1_1 | T2_SOURCE_INT, 0xFFFF);
+
+	T2CON = 0x00;
+	T2CONbits.ON = 1;
+	PR2 = 10000; // half period
+	TMR2 = 0;
+	
+	//TRISDbits.TRISD10 = 0;
+	OC1CON = 0x00000000;
+	OC1CONbits.OCM = 0b110; //PWM mode on OC1; Fault pin disabled
+	OC1CONbits.OCTSEL = 0; //Timer2 selected
+	OC1R = 0xFF; //50% duty cycle
+	OC1RS = 0xFF;
+	OC1CONbits.ON = 1;
+
+    //OpenOC1( OC_ON | OC_TIMER2_SRC | OC_PWM_FAULT_PIN_DISABLE, 0, 0);
+    //OpenTimer2( T2_ON | T2_PS_1_1 | T2_SOURCE_INT, 0xFFFF);
+
+    //SetDCOC1PWM(10000);
 
 
 	/*
@@ -212,7 +244,7 @@ void MCU_initialize(void)
 	old_screen = 3;
 	mscount = secondcount = 0;
 	sample_temp = true;
-	screen = TEMP;
+	//screen = TEMP;
 	num = 0;
 
 	ADC_init();
@@ -268,8 +300,29 @@ void __ISR(_TIMER_1_VECTOR, IPL7SOFT) Timer1Handler(void)
 }
 
 
-void __ISR(_OUTPUT_COMPARE_1_VECTOR, ipl7) OC1_IntHandler (void)
+unsigned int Pwm; // Variable to store calculated PWM value
+unsigned char Mode = 0; // Variable to determine ramp up or ramp down
+
+void __ISR(_TIMER_2_VECTOR, ipl7) T2_IntHandler(void)
 {
-// insert user code here
-IFS0CLR = 0x0040;                 // Clear the OC1 interrupt flag
+	if (Mode) {
+		if (Pwm < 0xFFFF) // Ramp up mode
+		{
+			Pwm++; // If the duty cycle is not at max, increase 
+			OC1RS = Pwm; // Write new duty cycle
+		} else {
+			Mode = 0; // PWM is at max, change mode to ramp down
+		}
+	}// End of ramp up
+	else {
+		if (!Pwm) // Ramp Down mode
+		{
+			Pwm--; // If the duty cycle is not at min, increase
+			OC1RS = Pwm; // Write new duty cycle
+		} else {
+			Mode = 1; // PWM is at min, change mode to ramp up
+		}
+	} // End of ramp down
+	// Insert user code here
+	IFS0CLR = 0x0100; // Clearing Timer2 interrupt flag
 }
