@@ -292,3 +292,9 @@ void __ISR(_TIMER_1_VECTOR, IPL7SOFT) Timer1Handler(void)
 	
 }
 
+
+void __ISR(_OUTPUT_COMPARE_1_VECTOR, ipl7) OC1_IntHandler (void)
+{
+// insert user code here
+IFS0CLR = 0x0040;                 // Clear the OC1 interrupt flag
+}
