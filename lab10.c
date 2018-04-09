@@ -87,11 +87,20 @@ void main(void)
 		 
 		if (old_screen != screen) {
 			TFT_FillRectangle(0, 80, 240, 240, TFT_BLUE);
-			if (screen == TEMP) {
-				uint16_t i;
-				for (i = 0; i < num; i++) {
-					TFT_DrawPixel(data[i].x, data[i].y, TFT_YELLOW);
-				}
+			if (screen == DAC)
+                 *       {
+                 *          TFT_FillRectangle(10,90,60,60, TFT_GREEN);
+                            TFT_FillRectangle(80,90,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(150,90,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(10,160,60,60, TFT_GREEN);
+                 *          TFT_FillRectangle(80,160,60,60, TFT_GREEN);
+                 *
+                 *          TFT_DrawString (10, 90, "0%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (80, 90, "25%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (150, 90, "50%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (10, 160, "75%", TFT_BLACK, TFT_GREEN);
+                 *          TFT_DrawString (80, 160, "100%", TFT_BLACK, TFT_GREEN);
+                         }
 			}
 			old_screen = screen;
 		}
@@ -107,23 +116,30 @@ void main(void)
 			TFT_DrawString(10, 135, "Lab 9", TFT_YELLOW, TFT_BLUE, 2);
 			TFT_DrawString(10, 160, "Jordan Hartung", TFT_GREEN, TFT_BLUE, 2);
 			TFT_DrawString(10, 200, "Jeremy Zacharia", TFT_PURPLE, TFT_BLUE, 2);
-		} else if (screen == JSTICK) {
-			valueu = ADC_sample(4);
-			values = ADC_sample(2);
+		} else if (screen == DAC) {
 
-			y = map(1023 - valueu, 0, 1023, 89, 311); //scale
-			x = map(values, 0, 1023, 9, 231); //scale
-
-			TFT_FillCircle(xp, yp, rad, TFT_BLUE);
-			TFT_DrawCircle(x, y, rad, TFT_YELLOW);
-			xp = x;
-			yp = y;
-
-			sprintf(message, "X: %d.0, Y: %d.0", x, y);
-			//TFT_DrawCircle(120, 200, 111, TFT_YELLOW);
-			TFT_DrawString(10, 100, message, TFT_BLACK, TFT_BLUE, 2);
-
-			printf("Val: %d\t%d\t%d\t%d\n", valueu, values, x, y);
+                 TFT_FillRectangle(0,200,255,10,TFT_BLACK);
+                 if(touch_x >= 10 && touch_x <= 71 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(0);
+                 * }
+                 if(touch_x >= 80 && touch_x <= 140 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(256);
+                 * }
+                 if(touch_x >= 150 && touch_x <= 210 && touch_y >= 90 && touch_y <= 150)
+                 * {
+                 *      DAC_SEND(512);
+                 * }
+                 if(touch_x >= 10 && touch_x <= 71 && touch_y >= 160 && touch_y <= 220)
+                 * {
+                 *      DAC_SEND(767);
+                 * }
+                 if(touch_x >= 80 && touch_x <= 140 && touch_y >= 160 && touch_y <= 220)
+                 * {
+                 *      DAC_SEND(1023);
+                 * }
+			
 		} else if (screen == TEMP && sample_temp == true) {
 			
 			temp_sense = (ADC_sample(8)*3.3 / 1024.0 - .5) / .01;
