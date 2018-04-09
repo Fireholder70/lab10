@@ -325,4 +325,3 @@ void __ISR(_TIMER_2_VECTOR, ipl7) T2_IntHandler(void)
 	} // End of ramp down
 	// Insert user code here
 	IFS0CLR = 0x0100; // Clearing Timer2 interrupt flag
-}
