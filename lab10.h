@@ -58,7 +58,7 @@
 #include "adc.h"
 #include "dac.h"
 #include "servo.h"
-
+#include "pwm.h"
 
 #include "math.h"
 
@@ -101,6 +101,7 @@ uint16_t temp_sense;
 uint8_t rad; //circle radius
 enum screen_t screen; //screen states
 enum screen_t old_screen;
+uint16_t pan, tilt;
 
 struct dataPoints
 {
@@ -111,6 +112,8 @@ struct dataPoints data[240];
 
 #define SERVO_1        PORTDbits.RD0     // servo 1 pin
 #define SERVO_1_TRIS   TRISDbits.TRISD0  // servo 1 trisate
+#define SERVO_2        PORTDbits.RD1     // servo 1 pin
+#define SERVO_2_TRIS   TRISDbits.TRISD1  // servo 1 trisate
 
 
 #endif	/* LAB08_H */

@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=../LIS3DH.c ../adc.c ../delay.c ../i2c.c ../spi.c ../tft.c ../tft_font.c ../touch.c ../lab10.c ../dac.c ../servo.c
+SOURCEFILES_QUOTED_IF_SPACED=../LIS3DH.c ../adc.c ../delay.c ../i2c.c ../spi.c ../tft.c ../tft_font.c ../touch.c ../lab10.c ../dac.c ../servo.c ../pwm.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1472/LIS3DH.o ${OBJECTDIR}/_ext/1472/adc.o ${OBJECTDIR}/_ext/1472/delay.o ${OBJECTDIR}/_ext/1472/i2c.o ${OBJECTDIR}/_ext/1472/spi.o ${OBJECTDIR}/_ext/1472/tft.o ${OBJECTDIR}/_ext/1472/tft_font.o ${OBJECTDIR}/_ext/1472/touch.o ${OBJECTDIR}/_ext/1472/lab10.o ${OBJECTDIR}/_ext/1472/dac.o ${OBJECTDIR}/_ext/1472/servo.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1472/LIS3DH.o.d ${OBJECTDIR}/_ext/1472/adc.o.d ${OBJECTDIR}/_ext/1472/delay.o.d ${OBJECTDIR}/_ext/1472/i2c.o.d ${OBJECTDIR}/_ext/1472/spi.o.d ${OBJECTDIR}/_ext/1472/tft.o.d ${OBJECTDIR}/_ext/1472/tft_font.o.d ${OBJECTDIR}/_ext/1472/touch.o.d ${OBJECTDIR}/_ext/1472/lab10.o.d ${OBJECTDIR}/_ext/1472/dac.o.d ${OBJECTDIR}/_ext/1472/servo.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/_ext/1472/LIS3DH.o ${OBJECTDIR}/_ext/1472/adc.o ${OBJECTDIR}/_ext/1472/delay.o ${OBJECTDIR}/_ext/1472/i2c.o ${OBJECTDIR}/_ext/1472/spi.o ${OBJECTDIR}/_ext/1472/tft.o ${OBJECTDIR}/_ext/1472/tft_font.o ${OBJECTDIR}/_ext/1472/touch.o ${OBJECTDIR}/_ext/1472/lab10.o ${OBJECTDIR}/_ext/1472/dac.o ${OBJECTDIR}/_ext/1472/servo.o ${OBJECTDIR}/_ext/1472/pwm.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/_ext/1472/LIS3DH.o.d ${OBJECTDIR}/_ext/1472/adc.o.d ${OBJECTDIR}/_ext/1472/delay.o.d ${OBJECTDIR}/_ext/1472/i2c.o.d ${OBJECTDIR}/_ext/1472/spi.o.d ${OBJECTDIR}/_ext/1472/tft.o.d ${OBJECTDIR}/_ext/1472/tft_font.o.d ${OBJECTDIR}/_ext/1472/touch.o.d ${OBJECTDIR}/_ext/1472/lab10.o.d ${OBJECTDIR}/_ext/1472/dac.o.d ${OBJECTDIR}/_ext/1472/servo.o.d ${OBJECTDIR}/_ext/1472/pwm.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/_ext/1472/LIS3DH.o ${OBJECTDIR}/_ext/1472/adc.o ${OBJECTDIR}/_ext/1472/delay.o ${OBJECTDIR}/_ext/1472/i2c.o ${OBJECTDIR}/_ext/1472/spi.o ${OBJECTDIR}/_ext/1472/tft.o ${OBJECTDIR}/_ext/1472/tft_font.o ${OBJECTDIR}/_ext/1472/touch.o ${OBJECTDIR}/_ext/1472/lab10.o ${OBJECTDIR}/_ext/1472/dac.o ${OBJECTDIR}/_ext/1472/servo.o
+OBJECTFILES=${OBJECTDIR}/_ext/1472/LIS3DH.o ${OBJECTDIR}/_ext/1472/adc.o ${OBJECTDIR}/_ext/1472/delay.o ${OBJECTDIR}/_ext/1472/i2c.o ${OBJECTDIR}/_ext/1472/spi.o ${OBJECTDIR}/_ext/1472/tft.o ${OBJECTDIR}/_ext/1472/tft_font.o ${OBJECTDIR}/_ext/1472/touch.o ${OBJECTDIR}/_ext/1472/lab10.o ${OBJECTDIR}/_ext/1472/dac.o ${OBJECTDIR}/_ext/1472/servo.o ${OBJECTDIR}/_ext/1472/pwm.o
 
 # Source Files
-SOURCEFILES=../LIS3DH.c ../adc.c ../delay.c ../i2c.c ../spi.c ../tft.c ../tft_font.c ../touch.c ../lab10.c ../dac.c ../servo.c
+SOURCEFILES=../LIS3DH.c ../adc.c ../delay.c ../i2c.c ../spi.c ../tft.c ../tft_font.c ../touch.c ../lab10.c ../dac.c ../servo.c ../pwm.c
 
 
 CFLAGS=
@@ -160,6 +160,12 @@ ${OBJECTDIR}/_ext/1472/servo.o: ../servo.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/_ext/1472/servo.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/servo.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1472/servo.o.d" -o ${OBJECTDIR}/_ext/1472/servo.o ../servo.c   
 	
+${OBJECTDIR}/_ext/1472/pwm.o: ../pwm.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1472 
+	@${RM} ${OBJECTDIR}/_ext/1472/pwm.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1472/pwm.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/pwm.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1 -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1472/pwm.o.d" -o ${OBJECTDIR}/_ext/1472/pwm.o ../pwm.c   
+	
 else
 ${OBJECTDIR}/_ext/1472/LIS3DH.o: ../LIS3DH.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} ${OBJECTDIR}/_ext/1472 
@@ -226,6 +232,12 @@ ${OBJECTDIR}/_ext/1472/servo.o: ../servo.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/_ext/1472/servo.o.d 
 	@${RM} ${OBJECTDIR}/_ext/1472/servo.o 
 	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/servo.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1472/servo.o.d" -o ${OBJECTDIR}/_ext/1472/servo.o ../servo.c   
+	
+${OBJECTDIR}/_ext/1472/pwm.o: ../pwm.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} ${OBJECTDIR}/_ext/1472 
+	@${RM} ${OBJECTDIR}/_ext/1472/pwm.o.d 
+	@${RM} ${OBJECTDIR}/_ext/1472/pwm.o 
+	@${FIXDEPS} "${OBJECTDIR}/_ext/1472/pwm.o.d" $(SILENT) -rsi ${MP_CC_DIR}../  -c ${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/_ext/1472/pwm.o.d" -o ${OBJECTDIR}/_ext/1472/pwm.o ../pwm.c   
 	
 endif
 

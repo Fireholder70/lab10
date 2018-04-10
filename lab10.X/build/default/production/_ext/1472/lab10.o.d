@@ -7,4 +7,5 @@ build/default/production/_ext/1472/lab10.o:  \
 ../touch.h  \
 ../adc.h  \
 ../dac.h  \
-../servo.h 
+../servo.h  \
+ ../pwm.h 

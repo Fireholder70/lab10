@@ -63,8 +63,8 @@ void main(void)
 	 *	3. Temperature
 	 */
 	while (1) {
-
-
+            pan = map(1023 - ADC_sample(2), 0, 1023, 1200, 5700);
+            tilt = map(ADC_sample(3), 0, 1023, 1200, 5700);
            // DAC_send(50); //input 0-1023
 
 
@@ -218,6 +218,7 @@ void MCU_initialize(void)
 	 */
 	DAC_CS_TRIS = TRIS_OUTPUT; // select for IO expander
         SERVO_1_TRIS = TRIS_OUTPUT; //set servo 1 pin to output
+        SERVO_2_TRIS = TRIS_OUTPUT; //set servo 1 pin to output
 
 
 	/*
@@ -238,19 +239,8 @@ void MCU_initialize(void)
 //	OC1RS = 5000;
 //	OC1CONbits.ON = 1;
 
-        T2CON = 0x00;
-	T2CONbits.ON = 1;
-        T2CONbits.TCKPS = 0b100; //1:4 prescalar
-	PR2 = 12500; // period
-	TMR2 = 0;
-
-	//TRISDbits.TRISD0 = 0;
-	OC1CON = 0x00000000;
-	OC1CONbits.OCM = 0b110; //PWM mode on OC1; Fault pin disabled
-	OC1CONbits.OCTSEL = 0; //Timer2 selected
-	OC1R = 6250; //50% duty cycle
-	OC1RS = 6250;
-	OC1CONbits.ON = 1;
+        ADC_init();
+        PWM_init();
 
 
 	/*
@@ -263,7 +253,6 @@ void MCU_initialize(void)
 	//screen = TEMP;
 	num = 0;
 
-	ADC_init();
 
 	/*
 	 *  Enable global interrupts
@@ -298,48 +287,12 @@ void _mon_putc(char c)
 void __ISR(_TIMER_1_VECTOR, IPL7SOFT) Timer1Handler(void)
 {
 	IFS0bits.T1IF = 0; // Clear interrupt flag
-	mscount++;
-        if (mscount == 20);
-        {
-            if(SERVO_1 == 0)
-            {
-                SERVO_1 = 1;
-            }
-            else
-            {
-                SERVO_1 = 0;
-            }
-            //servo_angle(0);
-            mscount = 0;
-        }
-	
+
 }
 
-
-unsigned int Pwm; // Variable to store calculated PWM value
-unsigned char Mode = 0; // Variable to determine ramp up or ramp down
-
-void __ISR(_TIMER_2_VECTOR, ipl7) T2_IntHandler(void)
+void __ISR(_TIMER_2_VECTOR, IPL7SOFT) Timer2Handler(void)
 {
-//	if (Mode) {
-//		if (Pwm < 0xFFFF) // Ramp up mode
-//		{
-//			Pwm++; // If the duty cycle is not at max, increase
-//			OC1RS = Pwm; // Write new duty cycle
-//		} else {
-//			Mode = 0; // PWM is at max, change mode to ramp down
-//		}
-//	}// End of ramp up
-//	else {
-//		if (!Pwm) // Ramp Down mode
-//		{
-//			Pwm--; // If the duty cycle is not at min, increase
-//			OC1RS = Pwm; // Write new duty cycle
-//		} else {
-//			Mode = 1; // PWM is at min, change mode to ramp up
-//		}
-//	} // End of ramp down
-//	// Insert user code here
-	IFS0CLR = 0x0100; // Clearing Timer2 interrupt flag
-
+    OC1RS = pan;
+    OC2RS = tilt;
+    IFS0bits.T2IF = 0; //  Clearing Timer2 interrupt flag
 }
